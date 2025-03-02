@@ -16,6 +16,7 @@ public:
     double calculate() const {
         return salary;
     }
+    
 };
 class FulltimeEmployee : public Employee {
 public:
