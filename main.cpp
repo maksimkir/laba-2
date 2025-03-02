@@ -5,6 +5,7 @@ using namespace std;
 
 class Employee{
 protected:
+
     int id;
     double salary;
 public:
