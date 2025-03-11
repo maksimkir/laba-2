@@ -41,3 +41,22 @@ public:
         return hoursWorked + hourlyRate;
     }
 };
+class PayrollManager {
+private:
+    vector<Employee*> employees;
+public:
+    void addEmployee(Employee *e) {
+        employees.push_back(e);
+    }
+    void processpayllor() const {
+        for (const auto& employee : employees) {
+            employee->showInfo();
+            cout <<"Total Pay: "<< employee->calculate() << endl;
+        }
+    }
+    ~PayrollManager() {
+        for (auto& e : employees) {
+            delete e;
+        }
+    }
+};
