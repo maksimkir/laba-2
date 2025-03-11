@@ -60,3 +60,13 @@ public:
         }
     }
 };
+int main() {
+    PayrollManager manager;
+    manager.addEmployee(new FulltimeEmployee (1,3000 , 500));
+    manager.addEmployee(new PartyEmployee(2,60 , 20));
+
+    cout<<"Payroll Processing: "<<endl;
+    manager.processpayllor();
+
+    return 0;
+}
