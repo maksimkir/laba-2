@@ -28,3 +28,16 @@ public:
         return salary + bonus;
     }
 };
+class PartyEmployee : public Employee {
+private:
+    int hoursWorked;
+    double hourlyRate;
+public:
+    PartyEmployee(int id, int hourse , double rate): Employee(id,0), hoursWorked(hourse),hourlyRate(rate){}
+    void showInfo() const {
+        cout<<"Part-Time Employee ID: "<<id<<endl<<"Hourse Worked: "<<hoursWorked<<endl<<"Hourly Rate: "<<hourlyRate<<endl;
+    }
+    double calculate() const {
+        return hoursWorked + hourlyRate;
+    }
+};
