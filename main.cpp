@@ -16,3 +16,15 @@ public:
         return salary;
     }
 };
+class FulltimeEmployee : public Employee {
+public:
+    double bonus;
+public:
+    FulltimeEmployee(int id,double salary , double bonus):Employee(id ,salary), bonus(bonus) {}
+    void showInfo() const {
+        cout<<"Full-Time Employee: "<< id<<endl<<"Salaty: "<<salary<<endl<<"Bonus: "<<bonus<<endl;
+    }
+    double calculate() const {
+        return salary + bonus;
+    }
+};
