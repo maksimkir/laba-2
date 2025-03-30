@@ -128,6 +128,30 @@ laba_2/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\laba_2.dir\build.make CMakeFiles/laba_2.dir/build
 .PHONY : laba_2/fast
 
+Department.obj: Department.cpp.obj
+.PHONY : Department.obj
+
+# target to build an object file
+Department.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\laba_2.dir\build.make CMakeFiles/laba_2.dir/Department.cpp.obj
+.PHONY : Department.cpp.obj
+
+Department.i: Department.cpp.i
+.PHONY : Department.i
+
+# target to preprocess a source file
+Department.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\laba_2.dir\build.make CMakeFiles/laba_2.dir/Department.cpp.i
+.PHONY : Department.cpp.i
+
+Department.s: Department.cpp.s
+.PHONY : Department.s
+
+# target to generate assembly for a file
+Department.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\laba_2.dir\build.make CMakeFiles/laba_2.dir/Department.cpp.s
+.PHONY : Department.cpp.s
+
 Employee.obj: Employee.cpp.obj
 .PHONY : Employee.obj
 
@@ -281,6 +305,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... laba_2
+	@echo ... Department.obj
+	@echo ... Department.i
+	@echo ... Department.s
 	@echo ... Employee.obj
 	@echo ... Employee.i
 	@echo ... Employee.s

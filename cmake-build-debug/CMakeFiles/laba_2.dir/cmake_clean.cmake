@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/laba_2.dir/Department.cpp.obj"
+  "CMakeFiles/laba_2.dir/Department.cpp.obj.d"
   "CMakeFiles/laba_2.dir/Employee.cpp.obj"
   "CMakeFiles/laba_2.dir/Employee.cpp.obj.d"
   "CMakeFiles/laba_2.dir/FulltimeEmployee.cpp.obj"

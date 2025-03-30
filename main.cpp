@@ -1,9 +1,7 @@
 #include <iostream>
 #include <vector>
-#include <windows.h>
-
+#include <memory>
 using namespace std;
-
 
 class Person {
 protected:
@@ -19,7 +17,6 @@ public:
 
 class Employee : public Person {
 protected:
-
     int id;
     double salary;
     static int employeeCount;
@@ -70,7 +67,6 @@ public:
 
 int Employee::employeeCount = 0;
 
-
 class FulltimeEmployee : public Employee {
 private:
     double bonus;
@@ -98,71 +94,29 @@ public:
     }
 };
 
-class ParttimeEmployee : public Employee {
+class Department {
 private:
-    int hoursWorked;
-    double hourlyRate;
+    string name;
+    vector<unique_ptr<Employee>> employees;
 public:
-    ParttimeEmployee(int id, int hours, double rate) : Employee(id, 0), hoursWorked(hours), hourlyRate(rate) {}
-
-    void showInfo() const override {
-        cout << "Part-Time Employee ID: " << id << "\nHours Worked: " << hoursWorked << "\nHourly Rate: " << hourlyRate << endl;
+    Department(string name) : name(name) {}
+    void addEmployee(unique_ptr<Employee> emp) {
+        employees.push_back(move(emp));
     }
-
-    double calculate() const override {
-        return hoursWorked * hourlyRate;
-    }
-};
-
-class PayrollManager {
-private:
-    vector<Employee*> employees;
-
-public:
-    void addEmployee(Employee* e) {
-        employees.push_back(e);
-    }
-
-    void processPayroll() const {
-        for (const auto& employee : employees) {
-            employee->showInfo();
-            cout << "Total Pay: " << employee->calculate() << "\n";
-        }
-    }
-
-    ~PayrollManager() {
-        for (auto& e : employees) {
-            delete e;
+    void showDepartment() const {
+        cout << "Department: " << name << "\nEmployees:\n";
+        for (const auto& emp : employees) {
+            emp->showInfo();
+            cout << "Total Salary: " << emp->calculateSalary() << "\n\n";
         }
     }
 };
 
 int main() {
-    SetConsoleOutputCP(65001);
-;    PayrollManager manager;
-    manager.addEmployee(new FulltimeEmployee(1, 3000, 500));
-    manager.addEmployee(new ParttimeEmployee(2, 60, 20));
+    Department itDept("IT Department");
+    itDept.addEmployee(make_unique<FulltimeEmployee>("John Doe", 30, 1, 5000, 1000));
+    itDept.addEmployee(make_unique<ParttimeEmployee>("Jane Smith", 25, 2, 50, 20));
 
-    cout << "Payroll Processing: " << endl;
-    manager.processPayroll();
-
-    // Демонстрація статичного поля
-    cout << "Total Employees: " << Employee::getEmployeeCount() << endl;
-
-    // Демонстрація унарного оператора "++"
-    Employee e1(3, 2000);
-    ++e1;
-    cout << e1 << endl;
-
-    // Демонстрація бінарного оператора "+"
-    Employee e2(4, 1500);
-    Employee e3 = e1 + e2;
-    cout << e3 << endl;
-
-    // Демонстрація перевантаженого оператора вводу
-    Employee e4(0, 0);
-    cin >> e4;
-    cout << e4 << endl;
-
+    itDept.showDepartment();
     return 0;
 }

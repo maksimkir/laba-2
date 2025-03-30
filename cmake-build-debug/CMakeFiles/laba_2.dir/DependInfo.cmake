@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "D:/lab_uni/OOP/laba 2/Department.cpp" "CMakeFiles/laba_2.dir/Department.cpp.obj" "gcc" "CMakeFiles/laba_2.dir/Department.cpp.obj.d"
   "D:/lab_uni/OOP/laba 2/Employee.cpp" "CMakeFiles/laba_2.dir/Employee.cpp.obj" "gcc" "CMakeFiles/laba_2.dir/Employee.cpp.obj.d"
   "D:/lab_uni/OOP/laba 2/FulltimeEmployee.cpp" "CMakeFiles/laba_2.dir/FulltimeEmployee.cpp.obj" "gcc" "CMakeFiles/laba_2.dir/FulltimeEmployee.cpp.obj.d"
   "D:/lab_uni/OOP/laba 2/ParttimeEmployee.cpp" "CMakeFiles/laba_2.dir/ParttimeEmployee.cpp.obj" "gcc" "CMakeFiles/laba_2.dir/ParttimeEmployee.cpp.obj.d"

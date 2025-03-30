@@ -16,4 +16,6 @@ add_executable(laba_2 main.cpp
         PayrollManager.h
         Person.cpp
         Person.h
+        Department.cpp
+        Department.h
 )
