@@ -17,79 +17,59 @@ public:
     virtual ~Person() {}
 };
 
-class Employee {
-
+class Employee : public Person {
 protected:
+
     int id;
     double salary;
-    static int employeeCount; // поле для підрахунку співробітників
-
+    static int employeeCount;
 public:
-    Employee(int id, double salary) : id(id), salary(salary) {
-        employeeCount++; // Збільшення лічильника
-    }
+    Employee(string name, int age, int id, double salary)
+        : Person(name, age), id(id), salary(salary) { employeeCount++; }
 
-    Employee(const Employee& other) : id(other.id), salary(other.salary) {
+    Employee(const Employee& other) : Person(other), id(other.id), salary(other.salary) {
         employeeCount++;
-        cout << "The copy constructor is called." << endl;
+        cout << "Copy constructor called." << endl;
     }
 
-    Employee(Employee&& other) noexcept : id(other.id), salary(other.salary) {
+    Employee(Employee&& other) noexcept : Person(other), id(other.id), salary(other.salary) {
         other.id = 0;
         other.salary = 0.0;
         cout << "Move constructor called" << endl;
     }
 
-    Employee& setSalary(double newSalary) {
-        this->salary = newSalary;
+    Employee& operator=(const Employee& other) {
+        if (this != &other) {
+            name = other.name;
+            age = other.age;
+            id = other.id;
+            salary = other.salary;
+        }
         return *this;
     }
 
-    static int getEmployeeCount() { // Статичний метод
-        return employeeCount;
+    Employee& operator=(Employee&& other) noexcept {
+        if (this != &other) {
+            name = move(other.name);
+            age = other.age;
+            id = other.id;
+            salary = other.salary;
+            other.id = 0;
+            other.salary = 0.0;
+        }
+        return *this;
     }
 
-    virtual void showInfo() const {
+    virtual double calculateSalary() const { return salary; }
+    virtual void showInfo() const override {
+        Person::showInfo();
         cout << "ID: " << id << "\nSalary: " << salary << endl;
     }
-
-    virtual double calculate() const {
-        return salary;
-    }
-
-    // Перевантаження оператора "<<" (дружня функція)
-    friend ostream& operator<<(ostream& os, const Employee& emp) {
-        os << "Employee ID: " << emp.id << "\nSalary: " << emp.salary;
-        return os;
-    }
-
-    // Перевантаження оператора вводу "<<"
-    friend istream& operator>>(istream& is, Employee& emp) {
-        cout << "Enter ID: ";
-        is >> emp.id;
-        cout << "Enter Salary: ";
-        is >> emp.salary;
-        return is;
-    }
-
-    // Перевантаження унарного оператора "++" (збільшення зарплати)
-    Employee& operator++() {
-        salary += 100;
-        return *this;
-    }
-
-    // Перевантаження бінарного оператора "+" (додає зарплати двох співробітників)
-    Employee operator+(const Employee& other) const {
-        return Employee(id, salary + other.salary);
-    }
-
-    virtual ~Employee() {
-        employeeCount--; // Зменшення лічильника
-    }
+    virtual ~Employee() { employeeCount--; }
 };
 
-// Ініціалізація статичного поля
 int Employee::employeeCount = 0;
+
 
 class FulltimeEmployee : public Employee {
 private:

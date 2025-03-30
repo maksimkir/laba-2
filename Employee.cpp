@@ -8,13 +8,13 @@ Employee::Employee(int id, double salary) : id(id), salary(salary) {
 
 Employee::Employee(const Employee& other) : id(other.id), salary(other.salary) {
     employeeCount++;
-    cout << "The copy constructor is called." << endl;
+    std::cout << "The copy constructor is called." << std::endl;
 }
 
 Employee::Employee(Employee&& other) noexcept : id(other.id), salary(other.salary) {
     other.id = 0;
     other.salary = 0.0;
-    cout << "Move constructor called" << endl;
+    std::cout << "Move constructor called" << std::endl;
 }
 
 Employee& Employee::setSalary(double newSalary) {
@@ -27,22 +27,22 @@ int Employee::getEmployeeCount() {
 }
 
 void Employee::showInfo() const {
-    cout << "ID: " << id << "\nSalary: " << salary << endl;
+    std::cout << "ID: " << id << "\nSalary: " << salary << std::endl;
 }
 
 double Employee::calculate() const {
     return salary;
 }
 
-ostream& operator<<(ostream& os, const Employee& emp) {
+std::ostream& operator<<(std::ostream& os, const Employee& emp) {
     os << "Employee ID: " << emp.id << "\nSalary: " << emp.salary;
     return os;
 }
 
-istream& operator>>(istream& is, Employee& emp) {
-    cout << "Enter ID: ";
+std::istream& operator>>(std::istream& is, Employee& emp) {
+    std::cout << "Enter ID: ";
     is >> emp.id;
-    cout << "Enter Salary: ";
+    std::cout << "Enter Salary: ";
     is >> emp.salary;
     return is;
 }

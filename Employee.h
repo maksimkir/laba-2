@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-using namespace std;
-
 class Employee {
 protected:
     int id;
@@ -19,11 +17,11 @@ public:
     static int getEmployeeCount();
     virtual void showInfo() const;
     virtual double calculate() const;
-    friend ostream& operator<<(ostream& os, const Employee& emp);
-    friend istream& operator>>(istream& is, Employee& emp);
+    friend std::ostream& operator<<(std::ostream& os, const Employee& emp);
+    friend std::istream& operator>>(std::istream& is, Employee& emp);
     Employee& operator++();
     Employee operator+(const Employee& other) const;
     virtual ~Employee();
 };
 
-#endif
+#endif // EMPLOYEE_H
