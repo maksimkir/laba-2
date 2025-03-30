@@ -75,14 +75,26 @@ class FulltimeEmployee : public Employee {
 private:
     double bonus;
 public:
-    FulltimeEmployee(int id, double salary, double bonus) : Employee(id, salary), bonus(bonus) {}
-
+    FulltimeEmployee(string name, int age, int id, double salary, double bonus)
+        : Employee(name, age, id, salary), bonus(bonus) {}
+    double calculateSalary() const override { return salary + bonus; }
     void showInfo() const override {
-        cout << "Full-Time Employee: " << id << "\nSalary: " << salary << "\nBonus: " << bonus << endl;
+        Employee::showInfo();
+        cout << "Bonus: " << bonus << endl;
     }
+};
 
-    double calculate() const override {
-        return salary + bonus;
+class ParttimeEmployee : public Employee {
+private:
+    int hoursWorked;
+    double hourlyRate;
+public:
+    ParttimeEmployee(string name, int age, int id, int hours, double rate)
+        : Employee(name, age, id, 0), hoursWorked(hours), hourlyRate(rate) {}
+    double calculateSalary() const override { return hoursWorked * hourlyRate; }
+    void showInfo() const override {
+        Employee::showInfo();
+        cout << "Hours Worked: " << hoursWorked << "\nHourly Rate: " << hourlyRate << endl;
     }
 };
 
