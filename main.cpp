@@ -1,72 +1,176 @@
 #include <iostream>
 #include <vector>
+#include <windows.h>
 
 using namespace std;
 
-class Employee{
+
+class Person {
+protected:
+    string name;
+    int age;
+public:
+    Person(string name, int age) : name(name), age(age) {}
+    virtual void showInfo() const {
+        cout << "Name: " << name << "\nAge: " << age << endl;
+    }
+    virtual ~Person() {}
+};
+
+class Employee {
+
 protected:
     int id;
     double salary;
+    static int employeeCount; // поле для підрахунку співробітників
+
 public:
-    Employee(int id, int salary):id(id), salary(salary) {}
-    void showInfo() const {
-        cout << "ID: " << id << endl<< "Salary: "<< salary << endl;
+    Employee(int id, double salary) : id(id), salary(salary) {
+        employeeCount++; // Збільшення лічильника
     }
-    double calculate() const {
+
+    Employee(const Employee& other) : id(other.id), salary(other.salary) {
+        employeeCount++;
+        cout << "The copy constructor is called." << endl;
+    }
+
+    Employee(Employee&& other) noexcept : id(other.id), salary(other.salary) {
+        other.id = 0;
+        other.salary = 0.0;
+        cout << "Move constructor called" << endl;
+    }
+
+    Employee& setSalary(double newSalary) {
+        this->salary = newSalary;
+        return *this;
+    }
+
+    static int getEmployeeCount() { // Статичний метод
+        return employeeCount;
+    }
+
+    virtual void showInfo() const {
+        cout << "ID: " << id << "\nSalary: " << salary << endl;
+    }
+
+    virtual double calculate() const {
         return salary;
     }
+
+    // Перевантаження оператора "<<" (дружня функція)
+    friend ostream& operator<<(ostream& os, const Employee& emp) {
+        os << "Employee ID: " << emp.id << "\nSalary: " << emp.salary;
+        return os;
+    }
+
+    // Перевантаження оператора вводу "<<"
+    friend istream& operator>>(istream& is, Employee& emp) {
+        cout << "Enter ID: ";
+        is >> emp.id;
+        cout << "Enter Salary: ";
+        is >> emp.salary;
+        return is;
+    }
+
+    // Перевантаження унарного оператора "++" (збільшення зарплати)
+    Employee& operator++() {
+        salary += 100;
+        return *this;
+    }
+
+    // Перевантаження бінарного оператора "+" (додає зарплати двох співробітників)
+    Employee operator+(const Employee& other) const {
+        return Employee(id, salary + other.salary);
+    }
+
+    virtual ~Employee() {
+        employeeCount--; // Зменшення лічильника
+    }
 };
+
+// Ініціалізація статичного поля
+int Employee::employeeCount = 0;
+
 class FulltimeEmployee : public Employee {
-public:
+private:
     double bonus;
 public:
-    FulltimeEmployee(int id,double salary , double bonus):Employee(id ,salary), bonus(bonus) {}
-    void showInfo() const {
-        cout<<"Full-Time Employee: "<< id<<endl<<"Salaty: "<<salary<<endl<<"Bonus: "<<bonus<<endl;
+    FulltimeEmployee(int id, double salary, double bonus) : Employee(id, salary), bonus(bonus) {}
+
+    void showInfo() const override {
+        cout << "Full-Time Employee: " << id << "\nSalary: " << salary << "\nBonus: " << bonus << endl;
     }
-    double calculate() const {
+
+    double calculate() const override {
         return salary + bonus;
     }
 };
-class PartyEmployee : public Employee {
+
+class ParttimeEmployee : public Employee {
 private:
     int hoursWorked;
     double hourlyRate;
 public:
-    PartyEmployee(int id, int hourse , double rate): Employee(id,0), hoursWorked(hourse),hourlyRate(rate){}
-    void showInfo() const {
-        cout<<"Part-Time Employee ID: "<<id<<endl<<"Hourse Worked: "<<hoursWorked<<endl<<"Hourly Rate: "<<hourlyRate<<endl;
+    ParttimeEmployee(int id, int hours, double rate) : Employee(id, 0), hoursWorked(hours), hourlyRate(rate) {}
+
+    void showInfo() const override {
+        cout << "Part-Time Employee ID: " << id << "\nHours Worked: " << hoursWorked << "\nHourly Rate: " << hourlyRate << endl;
     }
-    double calculate() const {
-        return hoursWorked + hourlyRate;
+
+    double calculate() const override {
+        return hoursWorked * hourlyRate;
     }
 };
+
 class PayrollManager {
 private:
     vector<Employee*> employees;
+
 public:
-    void addEmployee(Employee *e) {
+    void addEmployee(Employee* e) {
         employees.push_back(e);
     }
-    void processpayllor() const {
+
+    void processPayroll() const {
         for (const auto& employee : employees) {
             employee->showInfo();
-            cout <<"Total Pay: "<< employee->calculate() << endl;
+            cout << "Total Pay: " << employee->calculate() << "\n";
         }
     }
+
     ~PayrollManager() {
         for (auto& e : employees) {
             delete e;
         }
     }
 };
-int main() {
-    PayrollManager manager;
-    manager.addEmployee(new FulltimeEmployee (1,3000 , 500));
-    manager.addEmployee(new PartyEmployee(2,60 , 20));
 
-    cout<<"Payroll Processing: "<<endl;
-    manager.processpayllor();
+int main() {
+    SetConsoleOutputCP(65001);
+;    PayrollManager manager;
+    manager.addEmployee(new FulltimeEmployee(1, 3000, 500));
+    manager.addEmployee(new ParttimeEmployee(2, 60, 20));
+
+    cout << "Payroll Processing: " << endl;
+    manager.processPayroll();
+
+    // Демонстрація статичного поля
+    cout << "Total Employees: " << Employee::getEmployeeCount() << endl;
+
+    // Демонстрація унарного оператора "++"
+    Employee e1(3, 2000);
+    ++e1;
+    cout << e1 << endl;
+
+    // Демонстрація бінарного оператора "+"
+    Employee e2(4, 1500);
+    Employee e3 = e1 + e2;
+    cout << e3 << endl;
+
+    // Демонстрація перевантаженого оператора вводу
+    Employee e4(0, 0);
+    cin >> e4;
+    cout << e4 << endl;
 
     return 0;
 }
