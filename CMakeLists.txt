@@ -18,4 +18,6 @@ add_executable(laba_2 main.cpp
         Person.h
         Department.cpp
         Department.h
+        FulltimeEmployee.cpp
+        FulltimeEmployee.h
 )

@@ -13,6 +13,11 @@ public:
     Employee(int id, double salary);
     Employee(const Employee& other);
     Employee(Employee&& other) noexcept;
+
+    Employee(const std::string & name, int age, int id, double salary);
+
+    Employee(const std::string & name, int age, int id, double salary, double bonus);
+
     Employee& setSalary(double newSalary);
     static int getEmployeeCount();
     virtual void showInfo() const;
