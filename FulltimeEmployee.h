@@ -1,18 +1,12 @@
-#ifndef FULLTIMEEMPLOYEE_H
-#define FULLTIMEEMPLOYEE_H
-
+#pragma once
 #include "Employee.h"
-#include <string>
 
-class FulltimeEmployee : public Employee {
+class FulltimeEmployee final : public Employee {
 private:
+    double baseSalary;
     double bonus;
-
 public:
-
-    FulltimeEmployee(std::string name, int age, int id, double salary, double bonus);
-    double calculateSalary() const;
+    FulltimeEmployee(string name, int age, int id, double base, double bonus);
+    double calculateSalary() const override;
     void showInfo() const override;
 };
-
-#endif // FULLTIMEEMPLOYEE_H

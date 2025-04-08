@@ -2,60 +2,46 @@
 
 int Employee::employeeCount = 0;
 
-Employee::Employee(int id, double salary) : id(id), salary(salary) {
+Employee::Employee(string name, int age, int id) : Person(name, age), id(id) {
     employeeCount++;
 }
 
-Employee::Employee(const Employee& other) : id(other.id), salary(other.salary) {
+Employee::Employee(const Employee& other) : Person(other), id(other.id) {
     employeeCount++;
-    std::cout << "The copy constructor is called." << std::endl;
 }
 
-Employee::Employee(Employee&& other) noexcept : id(other.id), salary(other.salary) {
+Employee::Employee(Employee&& other) noexcept : Person(move(other)), id(other.id) {
     other.id = 0;
-    other.salary = 0.0;
-    std::cout << "Move constructor called" << std::endl;
 }
 
-Employee& Employee::setSalary(double newSalary) {
-    this->salary = newSalary;
+Employee& Employee::operator=(const Employee& other) {
+    if (this != &other) {
+        name = other.name;
+        age = other.age;
+        id = other.id;
+    }
     return *this;
 }
 
-int Employee::getEmployeeCount() {
-    return employeeCount;
+Employee& Employee::operator=(Employee&& other) noexcept {
+    if (this != &other) {
+        name = move(other.name);
+        age = other.age;
+        id = other.id;
+        other.id = 0;
+    }
+    return *this;
 }
 
 void Employee::showInfo() const {
-    std::cout << "ID: " << id << "\nSalary: " << salary << std::endl;
-}
-
-double Employee::calculate() const {
-    return salary;
-}
-
-std::ostream& operator<<(std::ostream& os, const Employee& emp) {
-    os << "Employee ID: " << emp.id << "\nSalary: " << emp.salary;
-    return os;
-}
-
-std::istream& operator>>(std::istream& is, Employee& emp) {
-    std::cout << "Enter ID: ";
-    is >> emp.id;
-    std::cout << "Enter Salary: ";
-    is >> emp.salary;
-    return is;
-}
-
-Employee& Employee::operator++() {
-    salary += 100;
-    return *this;
-}
-
-Employee Employee::operator+(const Employee& other) const {
-    return Employee(id, salary + other.salary);
+    Person::showInfo();
+    cout << "ID: " << id << endl;
 }
 
 Employee::~Employee() {
     employeeCount--;
+}
+
+string Employee::getName() const {
+    return name;
 }
