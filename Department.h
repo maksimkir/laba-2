@@ -1,21 +1,17 @@
-// department.h
-#ifndef DEPARTMENT_H
-#define DEPARTMENT_H
-
-#include <string>
+#pragma once
 #include <vector>
+#include <memory>
+#include <string>
+#include "Employee.h"
 
 class Department {
 private:
-    std::string name;
-    std::vector<std::string> employees;
-
+    string name;
+    vector<unique_ptr<Employee>> employees;
+    void logAction(const string& action) const;
 public:
-    Department(const std::string& dept_name);
-    void addEmployee(const std::string& employee_name);
-    void removeEmployee(const std::string& employee_name);
-    void displayEmployees() const;
-    std::string getName() const;
+    Department(string name);
+    void addEmployee(unique_ptr<Employee> emp);
+    void showDepartment() const;
+    void saveToFile(const string& filename);
 };
-
-#endif // DEPARTMENT_H

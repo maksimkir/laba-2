@@ -8,9 +8,9 @@ private:
     int hoursWorked;
     double hourlyRate;
 public:
-    ParttimeEmployee(int id, int hours, double rate);
+    ParttimeEmployee(std::string name, int age, int id, int hours, double rate);
+    double calculateSalary() const override;
     void showInfo() const override;
-    double calculate() const override;
 };
 
 #endif

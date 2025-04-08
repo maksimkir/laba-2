@@ -1,15 +1,14 @@
-#include "FulltimeEmployee.h"
+#include "ParttimeEmployee.h"
 #include <iostream>
 
-FulltimeEmployee::FulltimeEmployee(std::string name, int age, int id, double salary, double bonus)
-    : Employee(name ,age , id, salary , bonus ), bonus(bonus) {}
+ParttimeEmployee::ParttimeEmployee(string name, int age, int id, int hours, double rate)
+    : Employee(name, age, id), hoursWorked(hours), hourlyRate(rate) {}
 
-double FulltimeEmployee::calculateSalary() const {
-    return salary + bonus;
-
+double ParttimeEmployee::calculateSalary() const {
+    return hoursWorked * hourlyRate;
 }
 
-void FulltimeEmployee::showInfo() const {
+void ParttimeEmployee::showInfo() const {
     Employee::showInfo();
-    std::cout << "Bonus: " << bonus << std::endl;
+    cout << "Hours Worked: " << hoursWorked << ", Hourly Rate: " << hourlyRate << endl;
 }

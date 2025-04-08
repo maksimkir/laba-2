@@ -1,23 +1,29 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <fstream>
+#include <ctime>
+#include <limits>
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
 using namespace std;
 
-// Інтерфейс
 class ICalculatable {
 public:
     virtual double calculateSalary() const = 0;
     virtual ~ICalculatable() = default;
 };
 
-// Базовий клас
 class Person {
 protected:
     string name;
     int age;
 public:
     Person(string name, int age) : name(name), age(age) {}
-    void showInfoStatic() const { // демонстрація статичної прив'язки
+    void showInfoStatic() const {
         cout << "[STATIC] Name: " << name << ", Age: " << age << endl;
     }
     virtual void showInfo() const {
@@ -26,23 +32,21 @@ public:
     virtual ~Person() {}
 };
 
-// Абстрактний клас Employee
 class Employee : public Person, public ICalculatable {
 protected:
     int id;
     static int employeeCount;
 public:
-    Employee(string name, int age, int id)
-        : Person(name, age), id(id) { employeeCount++; }
+    Employee(string name, int age, int id) : Person(name, age), id(id) {
+        employeeCount++;
+    }
 
     Employee(const Employee& other) : Person(other), id(other.id) {
         employeeCount++;
-        cout << "Copy constructor called.\n";
     }
 
-    Employee(Employee&& other) noexcept : Person(other), id(other.id) {
+    Employee(Employee&& other) noexcept : Person(move(other)), id(other.id) {
         other.id = 0;
-        cout << "Move constructor called\n";
     }
 
     Employee& operator=(const Employee& other) {
@@ -69,12 +73,21 @@ public:
         cout << "ID: " << id << endl;
     }
 
-    virtual ~Employee() { employeeCount--; }
+    virtual ~Employee() {
+        employeeCount--;
+    }
+
+    string getName() const {
+        return name;
+    }
+
+    static int getEmployeeCount() {
+        return employeeCount;
+    }
 };
 
 int Employee::employeeCount = 0;
 
-// Повноцінний працівник
 class FulltimeEmployee final : public Employee {
 private:
     double baseSalary;
@@ -93,7 +106,6 @@ public:
     }
 };
 
-// Частковий працівник
 class ParttimeEmployee : public Employee {
 private:
     int hoursWorked;
@@ -112,7 +124,6 @@ public:
     }
 };
 
-// Відділ
 class Department {
 private:
     string name;
@@ -122,50 +133,115 @@ public:
 
     void addEmployee(unique_ptr<Employee> emp) {
         employees.push_back(move(emp));
+        logAction("Employee added");
     }
 
     void showDepartment() const {
-        cout << "Department: " << name << "\nEmployees:\n";
+        cout << "\nDepartment: " << name << "\nEmployees:\n";
         for (const auto& emp : employees) {
             emp->showInfo();
             cout << "Total Salary: " << emp->calculateSalary() << "\n\n";
         }
+        cout << "Total Employees: " << Employee::getEmployeeCount() << endl;
+    }
+
+    void saveToFile(const string& filename) {
+        ofstream out(filename);
+        for (const auto& emp : employees) {
+            out << emp->getName() << endl;
+        }
+    }
+
+    void logAction(const string& action) const {
+        ofstream log("log.txt", ios::app);
+        time_t now = time(0);
+        log << action << " at " << ctime(&now);
     }
 };
 
-void demonstrateStaticBinding(Person p) {
-    p.showInfoStatic(); // Статична прив'язка
+bool adminLogin() {
+    string password;
+    cout << "Enter admin password: ";
+    cin >> password;
+    return password == "admin52";
 }
 
-void demonstratePolymorphismByPointer(const Employee* emp) {
-    emp->showInfo();
-    cout << "Salary: " << emp->calculateSalary() << "\n";
-}
-
-void demonstratePolymorphismByReference(const Employee& emp) {
-    emp.showInfo();
-    cout << "Salary: " << emp.calculateSalary() << "\n";
+void clearScreen() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
 }
 
 int main() {
-    Department itDept("IT Department");
+    Department dept("IT Department");
+    string mode;
+    cout << "Select mode (admin/user): ";
+    cin >> mode;
 
-    itDept.addEmployee(make_unique<FulltimeEmployee>("John Doe", 30, 1, 5000, 1000));
-    itDept.addEmployee(make_unique<ParttimeEmployee>("Jane Smith", 25, 2, 50, 20));
+    if (mode == "admin") {
+        if (!adminLogin()) {
+            cout << "Access denied.\n";
+            return 0;
+        }
 
-    itDept.showDepartment();
+        int choice;
+        do {
+            cout << "\n--- Admin Menu ---\n"
+                 << "1. Add Fulltime Employee\n"
+                 << "2. Add Parttime Employee\n"
+                 << "3. Show Department\n"
+                 << "4. Save Employees to File\n"
+                 << "0. Exit\n"
+                 << "Your choice: ";
+            cin >> choice;
 
-    cout << "--- Static Binding Demo ---\n";
-    Person p("Anna Static", 40);
-    demonstrateStaticBinding(p);
+            clearScreen();
 
-    cout << "--- Run-Time Polymorphism by Pointer ---\n";
-    FulltimeEmployee fte("Max Mustermann", 35, 3, 6000, 500);
-    demonstratePolymorphismByPointer(&fte);
+            if (choice == 1) {
+                string name;
+                int age, id;
+                double base, bonus;
+                cout << "Enter name: ";
+                cin >> name;
+                cout << "Enter age: ";
+                cin >> age;
+                cout << "Enter ID: ";
+                cin >> id;
+                cout << "Enter base salary: ";
+                cin >> base;
+                cout << "Enter bonus: ";
+                cin >> bonus;
+                dept.addEmployee(make_unique<FulltimeEmployee>(name, age, id, base, bonus));
+            } else if (choice == 2) {
+                string name;
+                int age, id, hours;
+                double rate;
+                cout << "Enter name: ";
+                cin >> name;
+                cout << "Enter age: ";
+                cin >> age;
+                cout << "Enter ID: ";
+                cin >> id;
+                cout << "Enter hours worked: ";
+                cin >> hours;
+                cout << "Enter hourly rate: ";
+                cin >> rate;
+                dept.addEmployee(make_unique<ParttimeEmployee>(name, age, id, hours, rate));
+            } else if (choice == 3) {
+                dept.showDepartment();
+            } else if (choice == 4) {
+                dept.saveToFile("employees.txt");
+                cout << "Employees saved to file.\n";
+            }
+        } while (choice != 0);
 
-    cout << "--- Run-Time Polymorphism by Reference ---\n";
-    ParttimeEmployee pte("Lisa Flexible", 28, 4, 30, 25);
-    demonstratePolymorphismByReference(pte);
+    } else if (mode == "user") {
+        dept.showDepartment();
+    } else {
+        cout << "Invalid mode\n";
+    }
 
     return 0;
 }

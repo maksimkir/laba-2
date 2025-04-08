@@ -1,25 +1,33 @@
-// department.cpp
-#include "department.h"
-#include <algorithm>
+#include "Department.h"
+#include <fstream>
+#include <ctime>
 #include <iostream>
+using namespace std;
 
-Department::Department(const std::string& dept_name) : name(dept_name) {}
+Department::Department(string name) : name(name) {}
 
-void Department::addEmployee(const std::string& employee_name) {
-    employees.push_back(employee_name);
+void Department::addEmployee(unique_ptr<Employee> emp) {
+    employees.push_back(move(emp));
+    logAction("Added employee");
 }
 
-void Department::removeEmployee(const std::string& employee_name) {
-    employees.erase(std::remove(employees.begin(), employees.end(), employee_name), employees.end());
-}
-
-void Department::displayEmployees() const {
-    std::cout << "Employees in " << name << " department:" << std::endl;
-    for (const auto& employee : employees) {
-        std::cout << "- " << employee << std::endl;
+void Department::showDepartment() const {
+    cout << "Department: " << name << "\nEmployees:\n";
+    for (const auto& emp : employees) {
+        emp->showInfo();
+        cout << "Total Salary: " << emp->calculateSalary() << "\n\n";
     }
 }
 
-std::string Department::getName() const {
-    return name;
+void Department::saveToFile(const string& filename) {
+    ofstream out(filename);
+    for (const auto& emp : employees) {
+        out << emp->getName() << endl;
+    }
+}
+
+void Department::logAction(const string& action) const {
+    ofstream log("log.txt", ios::app);
+    time_t now = time(0);
+    log << action << " at " << ctime(&now);
 }

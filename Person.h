@@ -1,17 +1,15 @@
-#ifndef PERSON_H
-#define PERSON_H
-
-#include <iostream>
+#pragma once
 #include <string>
+#include <iostream>
+using namespace std;
 
 class Person {
 protected:
-    std::string name;
+    string name;
     int age;
 public:
-    Person(std::string name, int age);
+    Person(string name, int age);
+    void showInfoStatic() const;
     virtual void showInfo() const;
-    virtual ~Person();
+    virtual ~Person() {}
 };
-
-#endif // PERSON_H

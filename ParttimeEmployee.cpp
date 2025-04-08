@@ -1,17 +1,14 @@
 #include "ParttimeEmployee.h"
 #include <iostream>
 
-using namespace std;
+ParttimeEmployee::ParttimeEmployee(std::string name, int age, int id, int hours, double rate)
+    : Employee(name, age, id), hoursWorked(hours), hourlyRate(rate) {}
 
-ParttimeEmployee::ParttimeEmployee(int id, int hours, double rate)
-    : Employee(id, 0), hoursWorked(hours), hourlyRate(rate) {}
-
-void ParttimeEmployee::showInfo() const {
-    cout << "Part-Time Employee ID: " << id
-         << "\nHours Worked: " << hoursWorked
-         << "\nHourly Rate: " << hourlyRate << endl;
+double ParttimeEmployee::calculateSalary() const {
+    return hoursWorked * hourlyRate;
 }
 
-double ParttimeEmployee::calculate() const {
-    return hoursWorked * hourlyRate;
+void ParttimeEmployee::showInfo() const {
+    Employee::showInfo();
+    std::cout << "Hours Worked: " << hoursWorked << ", Hourly Rate: " << hourlyRate << std::endl;
 }
